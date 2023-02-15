@@ -130,3 +130,7 @@ dmypy.json
 
 # .idea
 .idea
+
+# FastAPI
+*.db
+migrations/
