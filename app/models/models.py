@@ -1,6 +1,5 @@
 from app.core.db import Base
 from sqlalchemy import Column, String, Text, Integer, DateTime, Boolean
-from datetime import datetime
 from sqlalchemy.sql import func
 
 
