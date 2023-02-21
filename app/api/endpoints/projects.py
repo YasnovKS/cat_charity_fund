@@ -42,4 +42,4 @@ async def delete_project(project_id: int,
 async def update_project(project_id, data: ProjectUpdate,
                          session: AsyncSession = Depends(get_async_session)
                          ) -> ProjectDB:
-    pass
+    project = await projects_crud.get_object(obj_id=project_id, session=session)
