@@ -42,4 +42,8 @@ async def delete_project(project_id: int,
 async def update_project(project_id, data: ProjectUpdate,
                          session: AsyncSession = Depends(get_async_session)
                          ) -> ProjectDB:
-    project = await projects_crud.get_object(obj_id=project_id, session=session)
+    project = await check_project_exists(project_id, session)
+    if data.name:
+        await check_project_name(data, session)
+    updated_project = await projects_crud.update_object(project, data, session)
+    return updated_project

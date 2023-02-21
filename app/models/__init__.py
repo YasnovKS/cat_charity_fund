@@ -1,1 +1,1 @@
-from .models import CharityProject  # noqa
+from .models import CharityProject, User  # noqa
