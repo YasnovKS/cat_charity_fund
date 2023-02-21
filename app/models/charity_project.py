@@ -1,11 +1,6 @@
 from app.core.db import Base
 from sqlalchemy import Column, String, Text, Integer, DateTime, Boolean
 from sqlalchemy.sql import func
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-
-
-class User(SQLAlchemyBaseUserTable[int], Base):
-    pass
 
 
 class CharityProject(Base):

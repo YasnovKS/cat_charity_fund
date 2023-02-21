@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
 
 
 class CRUDBase:
@@ -17,7 +18,7 @@ class CRUDBase:
         queryset = await session.execute(select(self.model))
         return queryset.scalars().all()
 
-    async def create_object(self, data, session: AsyncSession):
+    async def create_object(self, data: BaseModel, session: AsyncSession):
         data = data.dict()
         db_obj = self.model(**data)
         session.add(db_obj)
@@ -30,7 +31,7 @@ class CRUDBase:
         await session.commit()
         return db_obj
 
-    async def update_object(self, db_obj, data, session: AsyncSession):
+    async def update_object(self, db_obj, data: BaseModel, session: AsyncSession):
         obj_data = jsonable_encoder(db_obj)
         update_data = data.dict(exclude_unset=True)
         for field in obj_data:

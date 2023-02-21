@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.validators import check_project_exists, check_project_name, check_project_investments
+from app.api.validators import (check_project_exists,
+                                check_project_full_amount,
+                                check_project_investments, check_project_name)
+from app.core import current_superuser
 from app.core.db import get_async_session
 from app.crud import projects_crud
+from app.models import CharityProject
 from app.schemas.projects import ProjectCreate, ProjectDB, ProjectUpdate
 
 router = APIRouter()
@@ -18,7 +22,8 @@ async def get_projects(session: AsyncSession = Depends(get_async_session)
 
 
 @router.post('/', response_model=ProjectDB,
-             response_model_exclude_none=True)
+             response_model_exclude_none=True,
+             dependencies=[Depends(current_superuser)])
 async def create_project(project: ProjectCreate,
                          session: AsyncSession = Depends(get_async_session)
                          ) -> ProjectDB:
@@ -28,7 +33,8 @@ async def create_project(project: ProjectCreate,
 
 
 @router.delete('/{project_id}', response_model=ProjectDB,
-               response_model_exclude_none=True)
+               response_model_exclude_none=True,
+               dependencies=[Depends(current_superuser)])
 async def delete_project(project_id: int,
                          session: AsyncSession = Depends(get_async_session)
                          ) -> ProjectDB:
@@ -38,12 +44,14 @@ async def delete_project(project_id: int,
 
 
 @router.patch('/{project_id}', response_model=ProjectDB,
-              response_model_exclude_none=True)
+              response_model_exclude_none=True,
+              dependencies=[Depends(current_superuser)])
 async def update_project(project_id, data: ProjectUpdate,
                          session: AsyncSession = Depends(get_async_session)
                          ) -> ProjectDB:
-    project = await check_project_exists(project_id, session)
+    project: CharityProject = await check_project_exists(project_id, session)
     if data.name:
         await check_project_name(data, session)
+    await check_project_full_amount(project, data)
     updated_project = await projects_crud.update_object(project, data, session)
     return updated_project

@@ -4,6 +4,7 @@ from http import HTTPStatus
 from sqlalchemy import select
 from app.models import CharityProject
 from app.crud import projects_crud
+from app.schemas.projects import ProjectUpdate
 
 
 async def check_project_name(project, session: AsyncSession) -> None:
@@ -42,3 +43,12 @@ async def check_project_investments(obj_id: int,
             detail='Нельзя удалить проинвестированный проект.'
         )
     return db_obj
+
+
+def check_project_full_amount(db_obj: CharityProject,
+                              data: ProjectUpdate):
+    if db_obj.invested_amount > data.full_amount:
+        raise HTTPException(
+            status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
+            detail='Новая сумма для проекта не может быть меньше уже внесенной.'
+        )
