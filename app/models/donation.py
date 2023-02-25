@@ -1,18 +1,10 @@
-from sqlalchemy import (Boolean, CheckConstraint, Column, DateTime, ForeignKey,
-                        Integer, Text)
-from sqlalchemy.sql import func
+from sqlalchemy import Column, ForeignKey, Integer, Text
 
-from app.core.db import Base
+from app.core.db import PreBaseDonationCharity
 
 
-class Donation(Base):
-    user_id = Column(Integer, ForeignKey('user.id'))
+class Donation(PreBaseDonationCharity):
+    user_id = Column(Integer, ForeignKey(
+        'user.id', name='fk_donation_user_id_user'
+    ))
     comment = Column(Text)
-    full_amount = Column('Сумма пожертвования',
-                         Integer,
-                         CheckConstraint('full_amount > 0')
-                         )
-    invested_amount = Column(Integer, default=0)
-    fully_invested = Column(Boolean, default=False)
-    create_date = Column(DateTime, default=func.now())
-    close_date = Column(DateTime, default=None)
