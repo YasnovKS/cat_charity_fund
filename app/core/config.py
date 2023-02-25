@@ -2,10 +2,10 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_title: str
-    app_description: str
+    app_title: str = 'QRKot'
+    app_description: str = 'Проект для сбора пожертвований'
     database_url: str = 'sqlite+aiosqlite:///./fastapi.db'
-    secret: str
+    secret: str = 'hb1i2b4i1hj1jh24vb'
 
     class Config:
         env_file = '.env'
