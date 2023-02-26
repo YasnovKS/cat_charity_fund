@@ -27,8 +27,7 @@ async def get_all_charity_projects(
     """Get all the charity projects.
         Endpoint is available for all users.
     """
-    charity_projects = await projects_crud.get_multiple(session)
-    return charity_projects
+    return await projects_crud.get_multiple(session)
 
 
 @router.post(
@@ -89,10 +88,9 @@ async def partially_update_charity_project(
             object_in.name, session
         )
 
-    charity_project = await projects_crud.update(
+    return await projects_crud.update(
         charity_project, object_in, session
     )
-    return charity_project
 
 
 @router.delete(
@@ -112,9 +110,4 @@ async def delete_charity_project(
         project_id, session
     )
     await check_project_was_invested(project_id, session)
-    charity_project = await (
-        projects_crud.remove(
-            charity_project, session
-        )
-    )
-    return charity_project
+    return await (projects_crud.remove(charity_project, session))

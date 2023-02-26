@@ -27,8 +27,7 @@ router = APIRouter()
 async def get_all_donations_superuser(
     session: AsyncSession = Depends(get_async_session),
 ):
-    donations = await donation_crud.get_multiple(session)
-    return donations
+    return await donation_crud.get_multiple(session)
 
 
 @router.get(
@@ -40,10 +39,9 @@ async def get_my_donations(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    donations = await donation_crud.get_donations_by_user(
+    return await donation_crud.get_donations_by_user(
         session=session, user=user
     )
-    return donations
 
 
 @router.post(
