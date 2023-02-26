@@ -134,3 +134,4 @@ dmypy.json
 # FastAPI
 *.db
 migrations/
+.vscode/
